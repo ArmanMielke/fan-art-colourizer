@@ -23,6 +23,8 @@ def train(
     optimiser = Adam(model.parameters(), lr)
 
     for epoch in range(epochs):
+        loss_sum = 0
+
         for images in train_loader:
             if use_cuda:
                 images = images.cuda()
@@ -31,10 +33,12 @@ def train(
             output = model(images)
 
             loss = F.l1_loss(output, images)
-            log(f"Reconstruction loss in epoch {epoch}: {loss}")
-
             loss.backward()
             optimiser.step()
+            loss_sum += loss.detach().item()
+
+        loss_mean = loss_sum / len(train_loader)
+        log(f"[Epoch {epoch}] Train loss: {loss_mean}")
 
         # TODO use test set
         # TODO visualise and log images
