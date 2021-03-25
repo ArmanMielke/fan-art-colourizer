@@ -1,4 +1,5 @@
 from torch.optim import Adam
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 from torch.utils.data import DataLoader
 from torch.nn import functional as F
 
@@ -12,8 +13,8 @@ from models import BasicCNN
 def train(
     log_dir: str,
     epochs: int = 1000,
-    # TODO use schedule
-    lr: float = 5e-6,
+    initial_lr: float = 1e-4,
+    lr_scheduler_patience: int = 10,
     batch_size: int = 64,
     use_cuda: bool = True,
     log_images_after_epochs: Optional[int] = 10
@@ -22,7 +23,8 @@ def train(
     train_loader = DataLoader(load_flowers_dataset(), batch_size, shuffle=True, num_workers=2, drop_last=True)
     log("Dataset loaded.")
     model = BasicCNN()
-    optimiser = Adam(model.parameters(), lr)
+    optimiser = Adam(model.parameters(), initial_lr)
+    lr_scheduler = ReduceLROnPlateau(optimiser, patience=lr_scheduler_patience, verbose=True)
 
     for epoch in range(1, epochs + 1):
         loss_sum = 0
@@ -42,7 +44,9 @@ def train(
         loss_mean = loss_sum / len(train_loader)
         log(f"[Epoch {epoch}] Train loss: {loss_mean}")
 
-        # TODO use test set
+        # TODO validate
+
+        lr_scheduler.step(loss_mean)  # TODO give validation loss as input instead
 
         if log_images_after_epochs is not None and epoch % log_images_after_epochs == 0:
             # TODO log images

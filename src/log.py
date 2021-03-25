@@ -8,7 +8,7 @@ LOG_FILE_NAME = "log.txt"
 
 
 def initialise_logging(log_dir: str) -> Tuple[Callable[[str], None], Callable[[Tensor], None]]:
-    os.makedirs(log_dir)
+    os.makedirs(log_dir, exist_ok=True)
 
     def log(message: str):
         """Logs a message by printing it and appending it to a log file."""
