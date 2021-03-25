@@ -22,7 +22,11 @@ def train(
     log, log_images = initialise_logging(log_dir)
     train_loader = DataLoader(load_flowers_dataset(), batch_size, shuffle=True, num_workers=2, drop_last=True)
     log("Dataset loaded.")
+
     model = BasicCNN()
+    if use_cuda:
+        model.cuda()
+
     optimiser = Adam(model.parameters(), initial_lr)
     lr_scheduler = ReduceLROnPlateau(optimiser, patience=lr_scheduler_patience, verbose=True)
 
@@ -54,4 +58,4 @@ def train(
 
 
 if __name__ == "__main__":
-    train("../log/", use_cuda=False)
+    train("../log/")
