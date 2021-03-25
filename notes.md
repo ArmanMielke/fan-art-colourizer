@@ -1,5 +1,7 @@
 # Notes
 
+[Info on reproducibility with PyTorch](https://pytorch.org/docs/stable/notes/randomness.html)
+
 ## Regarding the use of inplace operations
 
 - This [pytorch autograd doc](https://pytorch.org/docs/master/notes/autograd.html#in-place-operations-on-variables) discourages the use of inplace operations
