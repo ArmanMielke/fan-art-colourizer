@@ -1,4 +1,4 @@
-import torch.nn as nn
+from torch import nn, Tensor
 
 
 class BasicCNN(nn.Module):
@@ -16,5 +16,5 @@ class BasicCNN(nn.Module):
             nn.Tanh(),
         )
 
-    def forward(self, image):
+    def forward(self, image: Tensor) -> Tensor:
         return self.model(image)
