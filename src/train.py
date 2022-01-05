@@ -40,7 +40,7 @@ def train(
 
             output = model(images)
 
-            loss = F.l1_loss(output, images)
+            loss = F.mse_loss(output, images)
             loss.backward()
             optimiser.step()
             loss_sum += loss.detach().item()
